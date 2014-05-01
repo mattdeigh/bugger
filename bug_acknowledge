@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require "pstore"
+
+bugs = PStore.new("#{File.dirname(__FILE__)}/bugs.pstore")
+bugs.ultra_safe = true
+bugs.transaction do
+  actions = bugs[:actions]
+  actions.delete(ARGV[0])
+  bugs[:actions] = actions
+end

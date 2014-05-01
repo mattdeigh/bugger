@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require "pstore"
+require "base64"
+require "terminal-notifier"
+
+def notify(action)
+  TerminalNotifier.notify(Base64.decode64(action), title: 'Bugger', execute: "/Users/matthew.day/dev/bugger/bug_acknowledge '#{action}'")
+end
+
+actions = []
+bugs = PStore.new("/Users/matthew.day/dev/bugger/bugs.pstore")
+bugs.transaction(true) do
+  actions = bugs[:actions]
+  actions.each do |action|
+    notify action
+  end
+end

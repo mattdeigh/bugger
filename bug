@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+require "pstore"
+require "base64"
+
+bugs = PStore.new("#{File.dirname(__FILE__)}/bugs.pstore")
+
+if ARGV[0]
+  action = Base64.encode64 ARGV.join(" ")
+
+  bugs.ultra_safe = true
+  bugs.transaction do
+    bugs[:actions] ||= Array.new
+    bugs[:actions].push(*action)
+  end
+else
+  bugs.transaction(true) do
+    puts bugs[:actions]
+  end
+end
